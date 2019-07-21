@@ -1,1 +1,1 @@
-$ web: gunicorn app:app
+$ web: gunicorn sleepy-caverns-22224.wsgi
