@@ -1,2 +1,2 @@
-web: gunicorn sleepy-caverns-22224.wsgi
+web: gunicorn postgres-telegram.wsgi
 
