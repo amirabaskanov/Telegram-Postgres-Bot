@@ -74,11 +74,12 @@ def callback_worker(call):
             record_to_insert = (first_name, last_name, age)
             cursor.execute(postgres_insert_query, record_to_insert, )
             connection.commit()
+            bot.send_message(call.message.chat.id, 'Remember it: )')
 
         except (Exception, psycopg2.Error) as error:
             if (connection):
                 print("Failed to insert record into mobile table", error)
-        bot.send_message(call.message.chat.id, 'Remember it: )')
+
 
     elif call.data == 'no':
         bot.send_message(call.message.chat.id, 'Delete it: )')
