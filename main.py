@@ -63,6 +63,7 @@ def get_age(message):
 @bot.callback_query_handler(func=lambda call: True)
 def callback_worker(call):
     if call.data == 'yes':
+        bot.send_message(call.message.chat.id, 'Remember it: )')
         try:
             connection = psycopg2.connect(user="amir",
                                           password="password1",
@@ -74,7 +75,7 @@ def callback_worker(call):
             record_to_insert = (first_name, last_name, age)
             cursor.execute(postgres_insert_query, record_to_insert, )
             connection.commit()
-            bot.send_message(call.message.chat.id, 'Remember it: )')
+
 
         except (Exception, psycopg2.Error) as error:
             if (connection):
