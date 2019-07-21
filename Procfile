@@ -1,2 +1,2 @@
-web: gunicorn postgres-telegram.wsgi
+worker: python main.py $PORT
 
