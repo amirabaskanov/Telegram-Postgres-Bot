@@ -1,7 +1,8 @@
 import telebot
+from psycopg2._psycopg import cursor
 from telebot import types
 import psycopg2
-bot = telebot.TeleBot('980141424:AAE2ZoI0nJcrVfZSmzD0Li9wstxxvS2Goc0')
+bot = telebot.TeleBot('978016640:AAGz8auvShVB-VnUH4xQbsuotT2zCFgRPio')
 
 first_name = ''
 last_name = ''
@@ -11,7 +12,7 @@ age = 0
 @bot.message_handler(content_types=['text'])
 def start(message):
     if message.text == '/hi' or message.text == '/start':
-        #postgres_create_query = 'CREATE TABLE IF NOT EXISTS cv (user_id INTEGER PRIMARY KEY , first_name VARCHAR(40), last_name VARCHAR(40));'
+        # postgres_create_query = 'CREATE TABLE IF NOT EXISTS cv (user_id INTEGER PRIMARY KEY , first_name VARCHAR(40), last_name VARCHAR(40));'
 
         a = str(message.from_user)
         bot.send_message(message.from_user.id, "What's Your name?")
@@ -42,22 +43,26 @@ def get_last_name(message):
 
 def get_age(message):
     global age
-    while age == 0:
+    if age == 0:
         try:
             age = int(message.text)
+            keyboard = types.InlineKeyboardMarkup()
+            key_yes = types.InlineKeyboardButton(text='Yes', callback_data='yes')
+            keyboard.add(key_yes)
+            key_no = types.InlineKeyboardButton(text='No', callback_data='no')
+            keyboard.add(key_no)
+            question = 'You are ' + str(age) + ' years old, Your name is ' + first_name + \
+                       ' ' + last_name + '.' + ' Want to save it?'
+            bot.send_message(message.from_user.id, text=question, reply_markup=keyboard)
 
         except Exception:
-            bot.send_message(message.from_user.id, 'use numbers, please)');
-        keyboard = types.InlineKeyboardMarkup();
-        key_yes = types.InlineKeyboardButton(text='Yes', callback_data='yes');
-        keyboard.add(key_yes);
-        key_no = types.InlineKeyboardButton(text='No', callback_data='no');
-        keyboard.add(key_no);
-        question = 'You are ' + str(age) + ' years old, Your name is ' + first_name +\
-                   ' ' + last_name + '.' + ' Want to save it?';
-        bot.send_message(message.from_user.id, text=question, reply_markup=keyboard)
+            bot.send_message(message.from_user.id, 'use numbers, please)')
+
         with open('cv.doc', 'a') as f:
             f.write(str(age) + '\n')
+
+    else:
+        pass
 
 
 @bot.callback_query_handler(func=lambda call: True)
